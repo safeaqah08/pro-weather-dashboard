@@ -1,6 +1,7 @@
-# 🌦️ Pro Weather Dashboard **[🔗 LIVE DEMO HERE](https://safeaqah08.github.io/pro-weather-dashboard)** 
+# 🌦️ Pro Weather Dashboard 
 
-A professional, responsive weather application that provides real-time meteorological data, interactive mapping, and data visualization. 
+A professional, responsive weather application that provides real-time meteorological data, interactive mapping, and data visualization. **[🔗 LIVE DEMO HERE](https://safeaqah08.github.io/pro-weather-dashboard)** 
+
 
 
 ## 🚀 Key Features
@@ -14,6 +15,7 @@ A professional, responsive weather application that provides real-time meteorolo
 * **Responsive Design:** Grid and Flexbox layout that adapts perfectly from Desktop dashboards to Mobile screens.
 
 
+
 ## 🛠️ Tech Stack
 
 * **Frontend:** HTML5, CSS3 (CSS Variables, Flexbox, Grid), Vanilla JavaScript (ES6+).
@@ -22,11 +24,13 @@ A professional, responsive weather application that provides real-time meteorolo
 * **Icons:** [Basmilius Weather Icons](https://github.com/basmilius/weather-icons) & FontAwesome.
 
 
+
 ## 📸 Screenshots
 
 | Dark Mode | Light Mode |
 |:---:|:---:|
 | <img src="https://github.com/user-attachments/assets/ed5277ff-e157-44fb-9ee2-dada609e2bda" width="400"> | <img src="https://github.com/user-attachments/assets/af72f900-aaa1-4050-8c36-2c6201a12769" width="400"> |
+
 
 
 ## 📦 How to Run
@@ -40,6 +44,7 @@ A professional, responsive weather application that provides real-time meteorolo
     cd pro-weather-dashboard
     ```
 3.  Open `index.html` in your browser. 
+
 
 
 ## 📄 Credits
