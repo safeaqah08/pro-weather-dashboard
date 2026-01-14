@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Weather Dashboard</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+
+   <link rel="icon" type="image/svg+xml" href="https://basmilius.github.io/weather-icons/production/fill/all/partly-cloudy-day.svg">  
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <header class="header-section card">
+            <div class="location-info">
+                <h1 id="location-name"><i class="fas fa-spinner fa-spin"></i> Locating...</h1>
+                <p id="current-date">Fetching data...</p>
+            </div>
+            
+            <div class="header-controls">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search city...">
+                    <button onclick="handleSearch()"><i class="fas fa-search"></i></button>
+                    
+                    <div id="suggestions-box" class="suggestions-list"></div>
+                </div>
+                <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <section class="card current-weather-card">
+            <div class="weather-top">
+                <div class="card-title">Current Conditions</div>
+                
+                <div class="current-icon" id="current-icon">
+                    </div>
+
+                <div class="weather-row">
+                    <div class="current-temp" id="current-temp">--°</div>
+                    
+                    <div class="weather-text-stack">
+                        <div class="current-condition" id="current-text">---</div>
+                        <div class="high-low">
+                            H: <span id="today-high">--</span>° L: <span id="today-low">--</span>°
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sun-cycle-container">
+                <div class="sun-item">
+                    <i class="fas fa-sun" style="color: #f39c12;"></i>
+                    <div>
+                        <span class="sun-label">Sunrise</span>
+                        <span id="left-sunrise" class="sun-time">--:--</span>
+                    </div>
+                </div>
+                <div class="sun-item">
+                    <i class="fas fa-moon" style="color: #4dabf7;"></i>
+                    <div>
+                        <span class="sun-label">Sunset</span>
+                        <span id="left-sunset" class="sun-time">--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="map"></div>
+        </section>
+
+        <section class="middle-column">
+            <div class="card">
+                <div class="card-title">24-Hour Temperature Trend</div>
+                <div class="chart-container">
+                    <canvas id="hourlyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <i class="fas fa-sun hl-icon"></i>
+                    <span class="hl-title">UV Index</span>
+                    <span class="hl-value" id="hl-uv">--</span>
+                </div>
+                <div class="highlight-card">
+                    <i class="fas fa-wind hl-icon"></i>
+                    <span class="hl-title">Wind Status</span>
+                    <span class="hl-value" id="hl-wind">-- km/h</span>
+                </div>
+                <div class="highlight-card">
+                    <i class="fas fa-droplet hl-icon"></i>
+                    <span class="hl-title">Humidity</span>
+                    <span class="hl-value" id="hl-humidity">--%</span>
+                </div>
+                <div class="highlight-card">
+                    <i class="fas fa-eye hl-icon"></i>
+                    <span class="hl-title">Visibility</span>
+                    <span class="hl-value" id="hl-visibility">-- km</span>
+                </div>
+                <div class="highlight-card">
+                    <i class="fas fa-lungs hl-icon"></i>
+                    <span class="hl-title">Air Quality</span>
+                    <span class="hl-value" id="hl-aqi">--</span>
+                </div>
+                <div class="highlight-card">
+                    <i class="fas fa-cloud-rain hl-icon"></i>
+                    <span class="hl-title">Rain</span>
+                    <span class="hl-value" id="hl-precip">-- mm</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-title">7-Day Forecast</div>
+            <div class="forecast-list" id="forecast-list-container">
+                <p>Loading forecast...</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

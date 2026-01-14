@@ -1,0 +1,447 @@
+/* --- CSS VARIABLES (THEMING) --- */
+:root {
+    --bg-app: #f6f8fa;
+    --bg-card: #ffffff;
+    --bg-highlight: #f0f2f5;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --accent-color: #4dabf7;
+    --accent-hover: #3b8dc4;
+    --border-color: #e1e4e8;
+    --card-shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
+    --grid-gap: 20px;
+    --border-radius: 20px;
+}
+
+body.dark-mode {
+    --bg-app: #121212;
+    --bg-card: #1e1e1e;
+    --bg-highlight: #2a2a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --border-color: #333;
+    --card-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    padding: 20px;
+    /* Ensure body takes height but allow mobile scroll */
+    min-height: 100vh;
+}
+
+/* --- Layout Grid --- */
+.dashboard-container {
+    max-width: 1400px; /* Increased slightly for better widescreen fit */
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--grid-gap);
+    /* Mobile defaults: auto height */
+    height: auto; 
+}
+
+/* =========================================
+   "FIT TO SCREEN"
+   (Only applies to Desktop screens > 900px)
+   ========================================= */
+@media (min-width: 900px) {
+    /* Lock the body scroll */
+    body {
+        height: 100vh; 
+        overflow: hidden; /* Stops the main scrollbar */
+    }
+
+    .dashboard-container {
+        /* Calculate height: 100vh minus top/bottom padding (20px + 20px = 40px) */
+        height: calc(100vh - 40px);
+        
+        /* Grid Layout: 3 Columns */
+        grid-template-columns: 320px 1fr 320px; 
+        
+        /* Grid Rows: Header takes what it needs (auto), Content takes the rest (1fr) */
+        grid-template-rows: auto minmax(0, 1fr); 
+    }
+
+    .header-section { 
+        grid-column: 1 / -1; 
+        /* Ensure header doesn't shrink/grow weirdly */
+        flex-shrink: 0; 
+    }
+
+    /* Make columns scroll INTERNALLY if content is too big */
+    .current-weather-card,
+    .middle-column,
+    .card:last-child { /* The Forecast Card (Right) */
+        height: 100%; /* Fill the 1fr space */
+        overflow-y: auto; /* Scroll THIS element, not the page */
+        
+        /* Optional: Hide scrollbars for a cleaner "App" look */
+        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;  /* IE/Edge */
+    }
+    
+    /* Hide scrollbars on Chrome/Safari */
+    .current-weather-card::-webkit-scrollbar,
+    .middle-column::-webkit-scrollbar,
+    .card:last-child::-webkit-scrollbar {
+        display: none;
+    }
+}
+/* ========================================= */
+
+
+/* --- Common Card Styles --- */
+.card {
+    background-color: var(--bg-card);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid transparent; 
+}
+body:not(.dark-mode) .card {
+    border: 1px solid var(--border-color);
+}
+
+.card-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Header Section --- */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.location-info h1 { font-size: 1.8rem; font-weight: 800; }
+.location-info p { color: var(--text-secondary); font-size: 0.95rem;}
+
+.header-controls { display: flex; gap: 15px; align-items: center; }
+
+.search-box { display: flex; gap: 8px; }
+.search-box input {
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-highlight);
+    color: var(--text-primary);
+    outline: none;
+    width: 200px;
+}
+.search-box input:focus { border-color: var(--accent-color); background: var(--bg-card); }
+.search-box button, .theme-toggle-btn {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent-color);
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.2s, background 0.2s;
+}
+.search-box button:hover, .theme-toggle-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+.theme-toggle-btn { background: var(--bg-highlight); color: var(--text-primary); border: 1px solid var(--border-color); }
+.theme-toggle-btn:hover { background: var(--border-color); }
+
+/* --- Current Weather Card (Left) --- */
+
+.current-weather-card {
+    /* Flex Layout to stack items vertically */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    height: 100%; /* Fill the column height */
+    overflow: hidden; /* Prevent map from spilling out */
+}
+
+/* --- LEFT COLUMN STYLES --- */
+
+.current-weather-card {
+    /* Stack everything vertically (Icon top, Info middle, Map bottom) */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    height: 100%; 
+    overflow: hidden; 
+}
+
+/* Top Section (Icon + Numbers) */
+.weather-top {
+    text-align: center;
+    flex: 0 0 auto;
+}
+
+/* The Weather Icon Image */
+.weather-img-lg {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 5px; /* Tiny space below icon */
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    animation: float 6s ease-in-out infinite;
+}
+
+/* The Container for "Number" + "Text" */
+.weather-row {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically align them */
+    gap: 20px; /* Space between the Weather Number and the Text */
+    margin-bottom: 10px;
+}
+
+/* The Weather Number */
+.current-temp {
+    font-size: 4rem; 
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text-primary);
+}
+
+/* The Text Stack (Right side of number) */
+.weather-text-stack {
+    display: flex;
+    flex-direction: column; /* Stack text vertically */
+    align-items: flex-start; /* Align text to the Left */
+    text-align: left;
+}
+
+.current-condition {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
+.high-low {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap; /* Keep H: and L: on one line */
+}
+
+/* Middle Section: Sunrise & Sunset */
+.sun-cycle-container {
+    display: flex;
+    justify-content: space-around;
+    background: var(--bg-highlight);
+    padding: 12px;
+    border-radius: 12px;
+    flex: 0 0 auto; 
+    margin-bottom: 5px;
+}
+
+.sun-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.sun-label { display: block; font-size: 0.75rem; color: var(--text-secondary); }
+.sun-time { font-weight: 700; color: var(--text-primary); }
+
+/*Map Section */
+#map {
+    flex: 1; /* Fill all remaining space */
+    width: 100%;
+    border-radius: 12px;
+    min-height: 140px; 
+    border: 1px solid var(--border-color);
+    z-index: 1;
+}
+
+/* Dark Mode Map Fix (Optional: Makes map look darker) */
+body.dark-mode .leaflet-layer,
+body.dark-mode .leaflet-control-zoom-in,
+body.dark-mode .leaflet-control-zoom-out,
+body.dark-mode .leaflet-control-attribution {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* --- Middle Column --- */
+.middle-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gap);
+    
+    /* Force column to take available height but not overflow */
+    height: 100%; 
+    min-height: 0; /* Critical fix for Firefox/Flexbox scrolling issues */
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    
+    /*  Fix the Chart height to 35-40% of the column */
+    /* This leaves 60% of the space for your 6 cards */
+    flex: 0 0 35%; 
+    min-height: 0; /* Allows chart to shrink if screen is tiny */
+}
+
+/* Highlights Grid */
+.highlights-grid {
+    /* Force the grid to take all REMAINING space */
+    flex: 1; 
+    
+    display: grid;
+    /* Force exactly 3 columns wide */
+    grid-template-columns: repeat(3, 1fr); 
+    /* Force exactly 2 rows tall (to fit 6 cards total) */
+    grid-template-rows: repeat(2, 1fr); 
+    
+    gap: 12px; /* Slightly smaller gap to save space */
+    min-height: 0;
+}
+
+.highlight-card {
+    background-color: var(--bg-highlight);
+    border-radius: 16px;
+    
+    /* Center content tightly so it fits in small boxes */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertical */
+    align-items: flex-start; /* Align text left (or center if you prefer) */
+    padding: 15px;           /* Reduced padding */
+    
+    gap: 5px;
+    transition: transform 0.2s;
+    height: 100%; /* Fill the grid cell */
+}
+
+.highlight-card:hover { transform: translateY(-2px); }
+
+/* Make text responsive so it doesn't overflow small boxes */
+.hl-title { 
+    color: var(--text-secondary); 
+    font-size: 0.8rem; /* Slightly smaller */
+    font-weight: 600;
+}
+.hl-value { 
+    font-size: 1.3rem; /* Slightly smaller */
+    font-weight: 700; 
+    color: var(--text-primary); 
+}
+.hl-icon { 
+    color: var(--accent-color); 
+    font-size: 1.1rem; 
+    margin-bottom: 2px; 
+}
+
+/* Optional: Center the content if the cards get really small */
+@media (max-width: 1100px) {
+    .highlight-card { align-items: center; text-align: center; }
+}
+
+/* --- 7-Day Forecast (Right) --- */
+.forecast-list { display: flex; flex-direction: column; gap: 12px; }
+.forecast-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.forecast-item:last-child { border-bottom: none; }
+.forecast-day { flex: 1; color: var(--text-secondary); font-weight: 500; }
+.forecast-icon { flex: 1; text-align: center; color: var(--accent-color); font-size: 1.1rem; }
+.forecast-temps { flex: 1; text-align: right; font-weight: 700; color: var(--text-primary); }
+.temp-min { color: var(--text-secondary); margin-left: 8px; font-weight: 500; }
+
+/* --- SEARCH SUGGESTIONS DROPDOWN --- */
+
+/* Make the search box the "Anchor" */
+.search-box {
+    position: relative; /* This ensures the list stays stuck to the input */
+}
+
+/* The List Container */
+.suggestions-list {
+    position: absolute;
+    top: 110%; /* Push it slightly below the input */
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    max-height: 250px;
+    overflow-y: auto; /* Scroll if too many results */
+    z-index: 1000; /* Float above everything else (especially the map!) */
+    display: none; /* Hidden by default */
+}
+
+/* Individual List Items */
+.suggestion-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background-color: var(--bg-highlight);
+}
+
+/* Tiny Country Flag/Code Style */
+.flag-code {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: var(--bg-highlight);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Large Icon (Left Column) */
+.weather-img-lg {
+    width: 120px; /* Big and bold */
+    height: 120px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); /* Nice subtle shadow for depth */
+    animation: float 6s ease-in-out infinite; /* Optional: Makes it float gently! */
+}
+
+/* Small Icon (7-Day Forecast) */
+.weather-img-sm {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+}
+
+/* Optional Animation to make it feel alive */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
